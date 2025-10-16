@@ -1,426 +1,443 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>OKX USDT Perpetual Tracker</title>
-  <style>
-    :root{
-      --bg:#0b1220; --card:#0f1724; --muted:#9aa4b2; --accent:#06b6d4;
-      --green:#16a34a; --red:#ef4444; --yellow:#f59e0b; --glass: rgba(255,255,255,0.03);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-    }
-    html,body{height:100%;margin:0;background:linear-gradient(180deg,#030615 0%,#071126 100%);color:#e6eef6}
-    .wrap{max-width:1100px;margin:28px auto;padding:20px;}
-    header{display:flex;align-items:center;justify-content:space-between;gap:12px}
-    h1{font-size:20px;margin:0;color:var(--accent)}
-    small{color:var(--muted)}
-    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px;margin-top:16px}
-    .card{grid-column:span 12;background:var(--card);border-radius:12px;padding:14px;box-shadow:0 6px 18px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.03)}
-    @media(min-width:900px){ .card.small{grid-column:span 4} .card.medium{grid-column:span 6} .card.large{grid-column:span 12} }
-    .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-    .stat{background:var(--glass);padding:10px;border-radius:10px;min-width:140px}
-    .green{color:var(--green)} .red{color:var(--red)} .accent{color:var(--accent)}
-    input[type="text"], select{background:#07111a;border:1px solid rgba(255,255,255,0.03);padding:8px;border-radius:8px;color:inherit}
-    .list{max-height:320px;overflow:auto;margin-top:8px;border-radius:10px}
-    .item{display:flex;justify-content:space-between;padding:8px;border-bottom:1px dashed rgba(255,255,255,0.03)}
-    .tiny{font-size:12px;color:var(--muted)}
-    .chip{padding:6px 8px;border-radius:8px;background:rgba(255,255,255,0.02);font-size:13px}
-    .btn{background:var(--accent);padding:8px 10px;border-radius:8px;border:none;color:#001019;cursor:pointer}
-  </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>OKX USDT Perpetual Tracker</title>
+  <style>
+    :root{
+      --bg:#0b1220; --card:#0f1724; --muted:#9aa4b2; --accent:#06b6d4;
+      --green:#16a34a; --red:#ef4444; --yellow:#f59e0b; --glass: rgba(255,255,255,0.03);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,#030615 0%,#071126 100%);color:#e6eef6}
+    .wrap{max-width:1100px;margin:28px auto;padding:20px;}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    h1{font-size:20px;margin:0;color:var(--accent)}
+    small{color:var(--muted)}
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px;margin-top:16px}
+    .card{grid-column:span 12;background:var(--card);border-radius:12px;padding:14px;box-shadow:0 6px 18px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.03)}
+    @media(min-width:900px){ .card.small{grid-column:span 4} .card.medium{grid-column:span 6} .card.large{grid-column:span 12} }
+    .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+    .stat{background:var(--glass);padding:10px;border-radius:10px;min-width:140px}
+    .green{color:var(--green)} .red{color:var(--red)} .accent{color:var(--accent)}
+    input[type="text"], select{background:#07111a;border:1px solid rgba(255,255,255,0.03);padding:8px;border-radius:8px;color:inherit}
+    .list{max-height:320px;overflow:auto;margin-top:8px;border-radius:10px}
+    .item{display:flex;justify-content:space-between;padding:8px;border-bottom:1px dashed rgba(255,255,255,0.03)}
+    .tiny{font-size:12px;color:var(--muted)}
+    .chip{padding:6px 8px;border-radius:8px;background:rgba(255,255,255,0.02);font-size:13px}
+    .btn{background:var(--accent);padding:8px 10px;border-radius:8px;border:none;color:#001019;cursor:pointer}
+  </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div>
-        <h1>📈 OKX USDT Perpetual Tracker</h1>
-        <small>Public OKX v5 API · Perpetual (SWAP) instruments · Last updated: <span id="lastUpdated">—</span></small>
-      </div>
-      <div class="row">
-        <div class="chip">Network: OKX Public</div>
-        <div style="width:10px"></div>
-        <button class="btn" id="refreshBtn">Refresh</button>
-      </div>
-    </header>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>📈 OKX USDT Perpetual Tracker</h1>
+        <small>Public OKX v5 API · Perpetual (SWAP) instruments · Last updated: <span id="lastUpdated">—</span></small>
+      </div>
+      <div class="row">
+        <div class="chip">Network: OKX Public</div>
+        <div style="width:10px"></div>
+        <button class="btn" id="refreshBtn">Refresh</button>
+      </div>
+    </header>
 
-    <div class="grid">
-      <div class="card small">
-        <div class="tiny">Market Summary</div>
-        <div style="margin-top:8px" id="summary">
-          <div class="row">
-            <div class="stat">
-              <div class="tiny">Green Pairs</div>
-              <div id="greenCount" class="accent">—</div>
-            </div>
-            <div class="stat">
-              <div class="tiny">Red Pairs</div>
-              <div id="redCount" class="tiny red">—</div>
-            </div>
-            <div class="stat">
-              <div class="tiny">Total Green Liquidity (USDT)</div>
-              <div id="greenLiquidity" class="green">—</div>
-            </div>
-            <div class="stat">
-              <div class="tiny">Total Red Liquidity (USDT)</div>
-              <div id="redLiquidity" class="red">—</div>
-            </div>
-          </div>
-          <div style="margin-top:10px" class="tiny">Dominant: <strong id="dominantSide">—</strong></div>
-        </div>
-      </div>
+    <div class="grid">
+      <div class="card small">
+        <div class="tiny">Market Summary</div>
+        <div style="margin-top:8px" id="summary">
+          <div class="row">
+            <div class="stat">
+              <div class="tiny">Green Pairs</div>
+              <div id="greenCount" class="accent">—</div>
+            </div>
+            <div class="stat">
+              <div class="tiny">Red Pairs</div>
+              <div id="redCount" class="tiny red">—</div>
+            </div>
+            <div class="stat">
+              <div class="tiny">Total Green Liquidity (USDT)</div>
+              <div id="greenLiquidity" class="green">—</div>
+            </div>
+            <div class="stat">
+              <div class="tiny">Total Red Liquidity (USDT)</div>
+              <div id="redLiquidity" class="red">—</div>
+            </div>
+          </div>
+          <div style="margin-top:10px" class="tiny">Dominant: <strong id="dominantSide">—</strong></div>
+        </div>
+      </div>
 
-      <div class="card medium">
-        <div class="tiny">Transaction Dominance (USDT quote volume)</div>
-        <div style="display:flex;gap:12px;margin-top:10px;align-items:center;">
-          <div style="flex:1;padding:8px;background:rgba(255,255,255,0.02);border-radius:8px">
-            <div class="tiny">Bullish TXN</div>
-            <div id="greenTxn" class="green" style="font-weight:700">—</div>
-          </div>
-          <div style="flex:1;padding:8px;background:rgba(255,255,255,0.02);border-radius:8px">
-            <div class="tiny">Bearish TXN</div>
-            <div id="redTxn" class="red" style="font-weight:700">—</div>
-          </div>
-          <div style="flex:0 0 160px">
-            <div class="tiny">Dominant Side</div>
-            <div id="txnDominant" class="chip">—</div>
-          </div>
-        </div>
-      </div>
+      <div class="card medium">
+        <div class="tiny">Transaction Dominance (USDT quote volume)</div>
+        <div style="display:flex;gap:12px;margin-top:10px;align-items:center;">
+          <div style="flex:1;padding:8px;background:rgba(255,255,255,0.02);border-radius:8px">
+            <div class="tiny">Bullish TXN</div>
+            <div id="greenTxn" class="green" style="font-weight:700">—</div>
+          </div>
+          <div style="flex:1;padding:8px;background:rgba(255,255,255,0.02);border-radius:8px">
+            <div class="tiny">Bearish TXN</div>
+            <div id="redTxn" class="red" style="font-weight:700">—</div>
+          </div>
+          <div style="flex:0 0 160px">
+            <div class="tiny">Dominant Side</div>
+            <div id="txnDominant" class="chip">—</div>
+          </div>
+        </div>
+          </div>
 
-      <div class="card large" style="margin-top:12px">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <div>
-            <div class="tiny">TXN Dominance Explorer (OKX SWAP pairs)</div>
-            <div style="margin-top:6px" class="tiny">Search pair (e.g. BTC-USDT-SWAP) or sort by gap</div>
-          </div>
-          <div class="row">
-            <input id="search" type="text" placeholder="search symbol" />
-            <select id="sort">
-              <option value="desc">Sort gap desc</option>
-              <option value="asc">Sort gap asc</option>
-            </select>
-          </div>
-        </div>
+      <div class="card large" style="margin-top:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div class="tiny">TXN Dominance Explorer (OKX SWAP pairs)</div>
+            <div style="margin-top:6px" class="tiny">Search pair (e.g. BTC-USDT-SWAP) or sort by gap</div>
+          </div>
+          <div class="row">
+            <input id="search" type="text" placeholder="search symbol" />
+            <select id="sort">
+              <option value="desc">Sort gap desc</option>
+              <option value="asc">Sort gap asc</option>
+            </select>
+          </div>
+        </div>
 
-        <div class="list" id="pairsList" aria-live="polite"></div>
-      </div>
+        <div class="list" id="pairsList" aria-live="polite"></div>
+      </div>
 
-      <div class="card medium">
-        <div class="tiny">Weekly Market Rhythm</div>
-        <div id="weekly" style="margin-top:8px" class="tiny">—</div>
-      </div>
+      <div class="card medium">
+        <div class="tiny">Weekly Market Rhythm</div>
+        <div id="weekly" style="margin-top:8px" class="tiny">—</div>
+      </div>
 
-      <div class="card medium">
-        <div class="tiny">ATH Gap / Quick Calculator</div>
-        <div style="margin-top:8px" class="tiny">
-          <input id="athSymbol" type="text" placeholder="Symbol (e.g. BTC-USDT-SWAP)" style="width:100%;margin-bottom:6px" />
-          <input id="athPrice" type="number" placeholder="ATH price" style="width:48%;margin-right:4%" />
-          <input id="entryPrice" type="number" placeholder="Entry price" style="width:48%" />
-          <div style="margin-top:8px">
-            <button id="calc" class="btn">Compute</button>
-          </div>
-          <div id="athResult" class="tiny" style="margin-top:10px"></div>
-        </div>
-      </div>
+      <div class="card medium">
+        <div class="tiny">ATH Gap / Quick Calculator</div>
+        <div style="margin-top:8px" class="tiny">
+          <input id="athSymbol" type="text" placeholder="Symbol (e.g. BTC-USDT-SWAP)" style="width:100%;margin-bottom:6px" />
+          <input id="athPrice" type="number" placeholder="ATH price" style="width:48%;margin-right:4%" />
+          <input id="entryPrice" type="number" placeholder="Entry price" style="width:48%" />
+          <div style="margin-top:8px">
+            <button id="calc" class="btn">Compute</button>
+          </div>
+          <div id="athResult" class="tiny" style="margin-top:10px"></div>
+        </div>
+      </div>
 
-    </div>
+    </div>
 
-    <footer style="margin-top:18px" class="tiny">
-      Built for OKX · Uses public API v5 endpoints · If browser CORS blocks OKX, use a small proxy or run locally.
-    </footer>
-  </div>
+    <footer style="margin-top:18px" class="tiny">
+      Built for OKX · Uses public API v5 endpoints · **[FIXED] Now uses a CORS proxy to bypass browser restrictions. For a stable solution, run your own proxy.**
+    </footer>
+  </div>
 
 <script>
 (() => {
-  // OKX v5 public base
-  const OKX_BASE = 'https://www.okx.com';
+  // OKX v5 public base
+  const OKX_BASE = 'https://www.okx.com';
 
-  // Element refs
-  const lastUpdatedEl = document.getElementById('lastUpdated');
-  const refreshBtn = document.getElementById('refreshBtn');
-  const greenCountEl = document.getElementById('greenCount');
-  const redCountEl = document.getElementById('redCount');
-  const greenLiquidityEl = document.getElementById('greenLiquidity');
-  const redLiquidityEl = document.getElementById('redLiquidity');
-  const greenTxnEl = document.getElementById('greenTxn');
-  const redTxnEl = document.getElementById('redTxn');
-  const txnDominantEl = document.getElementById('txnDominant');
-  const dominantSideEl = document.getElementById('dominantSide');
-  const pairsListEl = document.getElementById('pairsList');
-  const searchInput = document.getElementById('search');
-  const sortSelect = document.getElementById('sort');
-  const weeklyEl = document.getElementById('weekly');
+  // 🛑 THE FIX: Use a CORS Proxy to route the requests and bypass browser restrictions.
+  // We will encode the OKX_BASE URL and prepend it with a public CORS proxy.
+  // NOTE: Public CORS proxies like corsproxy.io may be rate-limited or unreliable.
+  // For production, you should host your own lightweight proxy.
+  const PROXY_URL = 'https://corsproxy.io/?' + encodeURIComponent(OKX_BASE);
 
-  // in-memory storage for weekly pattern (localStorage)
-  function formatManilaTime() {
-    return new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila' });
-  }
+  // CENTRALIZED FETCH FUNCTION: All API calls will now go through this.
+  async function fetchFromOKX(endpoint) {
+    const fullUrl = PROXY_URL + endpoint; // Append the OKX endpoint to the PROXY URL
+    // console.log('Fetching:', fullUrl); // Uncomment for debugging
+    const res = await fetch(fullUrl);
+    if (!res.ok) throw new Error(\`Failed to fetch from OKX API via proxy. Status: \${res.status}\`);
+    return res.json();
+  }
 
-  // helper: compact format
-  function fmt(n) {
-    if (!isFinite(n)) return '—';
-    const abs = Math.abs(n);
-    if (abs >= 1e9) return (n/1e9).toFixed(2)+'B';
-    if (abs >= 1e6) return (n/1e6).toFixed(2)+'M';
-    if (abs >= 1e3) return (n/1e3).toFixed(2)+'K';
-    return n.toFixed(2);
-  }
 
-  // Fetch instruments: SWAP (perpetual) that end with -USDT-SWAP
-  async function fetchSwapInstruments() {
-    const url = OKX_BASE + '/api/v5/public/instruments?instType=SWAP';
-    const res = await fetch(url);
-    if (!res.ok) throw new Error('Failed instruments');
-    const j = await res.json();
-    // j.data is array of {instId, baseCcy, quoteCcy, instType, lotSz,...}
-    return j.data.filter(d => (d.instId && d.instId.endsWith('-USDT-SWAP')));
-  }
+  // Element refs (unchanged)
+  const lastUpdatedEl = document.getElementById('lastUpdated');
+  const refreshBtn = document.getElementById('refreshBtn');
+  const greenCountEl = document.getElementById('greenCount');
+  const redCountEl = document.getElementById('redCount');
+  const greenLiquidityEl = document.getElementById('greenLiquidity');
+  const redLiquidityEl = document.getElementById('redLiquidity');
+  const greenTxnEl = document.getElementById('greenTxn');
+  const redTxnEl = document.getElementById('redTxn');
+  const txnDominantEl = document.getElementById('txnDominant');
+  const dominantSideEl = document.getElementById('dominantSide');
+  const pairsListEl = document.getElementById('pairsList');
+  const searchInput = document.getElementById('search');
+  const sortSelect = document.getElementById('sort');
+  const weeklyEl = document.getElementById('weekly');
 
-  // Fetch tickers for many instruments (comma separated instId).
-  // OKX supports multiple instId by comma.
-  async function fetchTickers(instIds) {
-    const chunk = (arr, n) => {
-      const out=[]; for(let i=0;i<arr.length;i+=n) out.push(arr.slice(i,i+n)); return out;
-    };
-    // OKX allows many, but to be safe chunk by 50
-    const chunks = chunk(instIds, 50);
-    let out=[];
-    for (const c of chunks) {
-      const q = '/api/v5/market/tickers?instType=SWAP&instIds=' + encodeURIComponent(c.join(','));
-      const resp = await fetch(OKX_BASE + q);
-      if (!resp.ok) throw new Error('tickers fetch failed');
-      const j = await resp.json();
-      if (j && j.data) out = out.concat(j.data);
-    }
-    // each data item: {instId,last,ask, bid, vol, sodUtc0...}
-    return out;
-  }
+  // in-memory storage for weekly pattern (localStorage)
+  function formatManilaTime() {
+    return new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila' });
+  }
 
-  // Fetch funding rate for a single instrument
-  async function fetchFundingRate(instId) {
-    // public funding rate endpoint:
-    // GET /api/v5/public/funding-rate?instId=BTC-USDT-SWAP
-    const resp = await fetch(OKX_BASE + '/api/v5/public/funding-rate?instId=' + encodeURIComponent(instId));
-    if (!resp.ok) return null;
-    const j = await resp.json();
-    // j.data is array; we take the lastFundingRate if present
-    if (j && j.data && j.data.length > 0) {
-      // element may have nextFundingRate, fundingRate etc.
-      const d = j.data[0];
-      // prefer fundingRate or nextFundingRate or estFundingRate
-      return parseFloat(d.fundingRate || d.nextFundingRate || d.lastFundingRate || 0);
-    }
-    return 0;
-  }
+  // helper: compact format
+  function fmt(n) {
+    if (!isFinite(n)) return '—';
+    const abs = Math.abs(n);
+    if (abs >= 1e9) return (n/1e9).toFixed(2)+'B';
+    if (abs >= 1e6) return (n/1e6).toFixed(2)+'M';
+    if (abs >= 1e3) return (n/1e3).toFixed(2)+'K';
+    return n.toFixed(2);
+  }
 
-  // Main update function
-  async function updateAll() {
-    try {
-      refreshBtn.disabled = true;
-      refreshBtn.textContent = 'Loading...';
-      lastUpdatedEl.textContent = formatManilaTime();
+  // Fetch instruments: SWAP (perpetual) that end with -USDT-SWAP
+  async function fetchSwapInstruments() {
+    const endpoint = '/api/v5/public/instruments?instType=SWAP';
+    const j = await fetchFromOKX(endpoint); // ⬅️ USED NEW FETCH FUNCTION
+    // j.data is array of {instId, baseCcy, quoteCcy, instType, lotSz,...}
+    return j.data.filter(d => (d.instId && d.instId.endsWith('-USDT-SWAP')));
+  }
 
-      // 1) fetch instruments
-      const instruments = await fetchSwapInstruments();
+  // Fetch tickers for many instruments (comma separated instId).
+  // OKX supports multiple instId by comma.
+  async function fetchTickers(instIds) {
+    const chunk = (arr, n) => {
+      const out=[]; for(let i=0;i<arr.length;i+=n) out.push(arr.slice(i,i+n)); return out;
+    };
+    // OKX allows many, but to be safe chunk by 50
+    const chunks = chunk(instIds, 50);
+    let out=[];
+    for (const c of chunks) {
+      const q = '/api/v5/market/tickers?instType=SWAP&instIds=' + encodeURIComponent(c.join(','));
+      const j = await fetchFromOKX(q); // ⬅️ USED NEW FETCH FUNCTION
+      if (j && j.data) out = out.concat(j.data);
+    }
+    // each data item: {instId,last,ask, bid, vol, sodUtc0...}
+    return out;
+  }
 
-      // For performance, limit to top N by instId alphabetical or by volume later.
-      // We'll ask tickers for first 200 instruments (or all if small)
-      const instIds = instruments.map(i => i.instId).slice(0, 200);
+  // Fetch funding rate for a single instrument
+  async function fetchFundingRate(instId) {
+    // public funding rate endpoint:
+    const endpoint = '/api/v5/public/funding-rate?instId=' + encodeURIComponent(instId);
+    try {
+      const j = await fetchFromOKX(endpoint); // ⬅️ USED NEW FETCH FUNCTION
+      // j.data is array; we take the lastFundingRate if present
+      if (j && j.data && j.data.length > 0) {
+        // element may have nextFundingRate, fundingRate etc.
+        const d = j.data[0];
+        // prefer fundingRate or nextFundingRate or estFundingRate
+        return parseFloat(d.fundingRate || d.nextFundingRate || d.lastFundingRate || 0);
+      }
+      return 0;
+    } catch (e) {
+      return 0; // Return 0 on fetch error
+    }
+  }
 
-      // 2) fetch tickers
-      const tickers = await fetchTickers(instIds);
+  // Main update function
+  async function updateAll() {
+    try {
+      refreshBtn.disabled = true;
+      refreshBtn.textContent = 'Loading...';
+      lastUpdatedEl.textContent = formatManilaTime();
 
-      // Build a map tickerMap[instId] = tickerData
-      const tickerMap = {};
-      tickers.forEach(t => {
-        // OKX ticker fields:
-        // instId, last, vol (base asset volume), volCcy (quote?), ask, bid, open24h, high24h, low24h, sodUtc0...
-        const instId = t.instId || t.instId;
-        tickerMap[instId] = t;
-      });
+      // 1) fetch instruments
+      const instruments = await fetchSwapInstruments();
 
-      // 3) For each instrument assemble symbol info and fetch funding rates in parallel (but limit concurrency)
-      const limiter = (arr, fn, concurrency = 8) => {
-        const results = []; let i=0;
-        return new Promise((resolve, reject) => {
-          let running = 0;
-          function next() {
-            if (i >= arr.length && running === 0) return resolve(results);
-            while (running < concurrency && i < arr.length) {
-              const idx = i++;
-              running++;
-              Promise.resolve(fn(arr[idx], idx)).then(r => {
-                results[idx] = r;
-                running--; next();
-              }).catch(err => { running--; results[idx] = { error: err.message || String(err) }; next(); });
-            }
-          }
-          next();
-        });
-      };
+      // For performance, limit to top N by instId alphabetical or by volume later.
+      // We'll ask tickers for first 200 instruments (or all if small)
+      const instIds = instruments.map(i => i.instId).slice(0, 200);
 
-      // prepare array of instrument data to compute
-      const items = instruments.map(inst => {
-        const ticker = tickerMap[inst.instId] || {};
-        // determine quote volume in USDT - OKX ticker provides volCcy or vol (check both)
-        const quoteVol = parseFloat(ticker.volCcy || ticker.volCcy24h || ticker.quoteVol || ticker.volUsd || ticker.vol || 0) || 0;
-        const priceChange = (() => {
-          const open24 = parseFloat(ticker.open24h || ticker.oi || 0);
-          const last = parseFloat(ticker.last || 0);
-          if (open24 && last) return ((last - open24) / open24) * 100;
-          // fallback to 0
-          return parseFloat(ticker.change || 0);
-        })();
-        return {
-          instId: inst.instId,
-          baseCcy: inst.baseCcy,
-          quoteCcy: inst.quoteCcy,
-          priceChangePercent: priceChange,
-          lastPrice: parseFloat(ticker.last || 0),
-          volume: quoteVol,
-          rawTicker: ticker
-        };
-      });
+      // 2) fetch tickers
+      const tickers = await fetchTickers(instIds);
 
-      // fetch funding rates for those with volume > 0 (limit concurrency)
-      const withFunding = await limiter(items, async (it, idx) => {
-        if (!it || !it.instId) return it;
-        try {
-          const fr = await fetchFundingRate(it.instId);
-          return { ...it, fundingRate: (isFinite(fr) ? fr : 0) };
-        } catch (e) {
-          return { ...it, fundingRate: 0 };
-        }
-      }, 6);
+      // Build a map tickerMap[instId] = tickerData
+      const tickerMap = {};
+      tickers.forEach(t => {
+        // OKX ticker fields:
+        // instId, last, vol (base asset volume), volCcy (quote?), ask, bid, open24h, high24h, low24h, sodUtc0...
+        const instId = t.instId || t.instId;
+        tickerMap[instId] = t;
+      });
 
-      // filter out zero-volume rows
-      const filtered = withFunding.filter(d => d.volume > 0);
+      // 3) For each instrument assemble symbol info and fetch funding rates in parallel (but limit concurrency)
+      const limiter = (arr, fn, concurrency = 6) => { // Reduced concurrency for public proxy safety
+        const results = []; let i=0;
+        return new Promise((resolve, reject) => {
+          let running = 0;
+          function next() {
+            if (i >= arr.length && running === 0) return resolve(results);
+            while (running < concurrency && i < arr.length) {
+              const idx = i++;
+              running++;
+              Promise.resolve(fn(arr[idx], idx)).then(r => {
+                results[idx] = r;
+                running--; next();
+              }).catch(err => { running--; results[idx] = { error: err.message || String(err) }; next(); });
+            }
+          }
+          next();
+        });
+      };
 
-      // compute aggregates
-      const green = filtered.filter(d => d.priceChangePercent >= 0);
-      const red = filtered.filter(d => d.priceChangePercent < 0);
+      // prepare array of instrument data to compute (unchanged logic)
+      const items = instruments.map(inst => {
+        const ticker = tickerMap[inst.instId] || {};
+        // determine quote volume in USDT - OKX ticker provides volCcy or vol (check both)
+        const quoteVol = parseFloat(ticker.volCcy || ticker.volCcy24h || ticker.quoteVol || ticker.volUsd || ticker.vol || 0) || 0;
+        const priceChange = (() => {
+          const open24 = parseFloat(ticker.open24h || 0); // Removed || ticker.oi || 0 as oi is Open Interest, not Open Price.
+          const last = parseFloat(ticker.last || 0);
+          if (open24 && last) return ((last - open24) / open24) * 100;
+          // fallback to 0
+          return parseFloat(ticker.change || 0);
+        })();
+        return {
+          instId: inst.instId,
+          baseCcy: inst.baseCcy,
+          quoteCcy: inst.quoteCcy,
+          priceChangePercent: priceChange,
+          lastPrice: parseFloat(ticker.last || 0),
+          volume: quoteVol,
+          rawTicker: ticker
+        };
+      });
 
-      const greenLiquidityTotal = green.reduce((s, x) => s + (Number(x.volume)||0), 0);
-      const redLiquidityTotal = red.reduce((s, x) => s + (Number(x.volume)||0), 0);
+      // fetch funding rates for those with volume > 0 (limit concurrency)
+      const withFunding = await limiter(items, async (it, idx) => {
+        if (!it || !it.instId) return it;
+        try {
+          // Use the local fetchFundingRate which now uses the proxy
+          const fr = await fetchFundingRate(it.instId);
+          return { ...it, fundingRate: (isFinite(fr) ? fr : 0) };
+        } catch (e) {
+          return { ...it, fundingRate: 0 };
+        }
+      }, 6); // concurrency limit is set to 6
 
-      // "txn" proxy using quote volume
-      const greenTxnTotal = greenLiquidityTotal;
-      const redTxnTotal = redLiquidityTotal;
+      // rest of logic (unchanged, just relying on the fetched data)
 
-      // counts for funding/price combos
-      const gPos = filtered.filter(d => d.priceChangePercent >= 0 && d.fundingRate >= 0).length;
-      const gNeg = filtered.filter(d => d.priceChangePercent >= 0 && d.fundingRate < 0).length;
-      const rPos = filtered.filter(d => d.priceChangePercent < 0 && d.fundingRate >= 0).length;
-      const rNeg = filtered.filter(d => d.priceChangePercent < 0 && d.fundingRate < 0).length;
+      // filter out zero-volume rows
+      const filtered = withFunding.filter(d => d.volume > 0);
 
-      // determine dominant
-      const dominantTxn = greenTxnTotal > redTxnTotal ? '🟢 Bullish (Green)' : redTxnTotal > greenTxnTotal ? '🔴 Bearish (Red)' : '⚫ Neutral';
+      // compute aggregates
+      const green = filtered.filter(d => d.priceChangePercent >= 0);
+      const red = filtered.filter(d => d.priceChangePercent < 0);
 
-      // update UI elements
-      lastUpdatedEl.textContent = formatManilaTime();
-      greenCountEl.textContent = String(green.length);
-      redCountEl.textContent = String(red.length);
-      greenLiquidityEl.textContent = fmt(greenLiquidityTotal);
-      redLiquidityEl.textContent = fmt(redLiquidityTotal);
-      greenTxnEl.textContent = fmt(greenTxnTotal);
-      redTxnEl.textContent = fmt(redTxnTotal);
-      txnDominantEl.textContent = dominantTxn;
-      dominantSideEl.textContent = (greenLiquidityTotal > redLiquidityTotal) ? 'Bullish Liquidity (Green)' : (redLiquidityTotal > greenLiquidityTotal) ? 'Bearish Liquidity (Red)' : 'Balanced';
+      const greenLiquidityTotal = green.reduce((s, x) => s + (Number(x.volume)||0), 0);
+      const redLiquidityTotal = red.reduce((s, x) => s + (Number(x.volume)||0), 0);
 
-      // Build list items with a simple gap metric (abs difference of buy vs sell proxy using sign)
-      const enriched = filtered.map(d => {
-        const greenTxn = d.priceChangePercent >= 0 ? d.volume : 0;
-        const redTxn = d.priceChangePercent < 0 ? d.volume : 0;
-        const diff = Math.abs(greenTxn - redTxn);
-        return { ...d, greenTxn, redTxn, diff };
-      });
+      // "txn" proxy using quote volume
+      const greenTxnTotal = greenLiquidityTotal;
+      const redTxnTotal = redLiquidityTotal;
 
-      // Sorting & filtering based on UI controls
-      function renderList() {
-        const q = (searchInput.value||'').trim().toLowerCase();
-        const order = sortSelect.value || 'desc';
-        let list = enriched.slice();
-        if (q) list = list.filter(x => x.instId.toLowerCase().includes(q));
-        list.sort((a,b) => order === 'desc' ? b.diff - a.diff : a.diff - b.diff);
-        // cap to 200
-        list = list.slice(0, 200);
+      // counts for funding/price combos (unused in UI but kept for integrity)
+      const gPos = filtered.filter(d => d.priceChangePercent >= 0 && d.fundingRate >= 0).length;
+      const gNeg = filtered.filter(d => d.priceChangePercent >= 0 && d.fundingRate < 0).length;
+      const rPos = filtered.filter(d => d.priceChangePercent < 0 && d.fundingRate >= 0).length;
+      const rNeg = filtered.filter(d => d.priceChangePercent < 0 && d.fundingRate < 0).length;
 
-        pairsListEl.innerHTML = '';
-        if (list.length === 0) pairsListEl.innerHTML = '<div style="padding:12px;color:var(--muted)">No matching pairs.</div>';
-        list.forEach(item => {
-          const el = document.createElement('div');
-          el.className = 'item';
-          el.innerHTML = \`
-            <div>
-              <div style="font-weight:600">\${item.instId}</div>
-              <div class="tiny">\${item.priceChangePercent ? item.priceChangePercent.toFixed(2) + '%' : '—'} &middot; Last: \${item.lastPrice || '—'}</div>
-            </div>
-            <div style="text-align:right">
-              <div><span class="green">\${fmt(item.greenTxn)}</span> / <span class="red">\${fmt(item.redTxn)}</span></div>
-              <div class="tiny">fund: \${(item.fundingRate||0).toFixed(6)}</div>
-            </div>
-          \`;
-          pairsListEl.appendChild(el);
-        });
-      }
+      // determine dominant
+      const dominantTxn = greenTxnTotal > redTxnTotal ? '🟢 Bullish (Green)' : redTxnTotal > greenTxnTotal ? '🔴 Bearish (Red)' : '⚫ Neutral';
 
-      // Weekly rhythm logic (persisted in localStorage)
-      (function updateWeekly() {
-        try {
-          const today = new Date().toLocaleDateString('en-US', { timeZone: 'Asia/Manila' });
-          const weekday = new Date().toLocaleDateString('en-US', { weekday: 'short', timeZone: 'Asia/Manila' });
-          const bias = dominantTxn.includes('Bullish') ? '🟩' : dominantTxn.includes('Bearish') ? '🟥' : '⚫';
-          let history = JSON.parse(localStorage.getItem('okxMarketHistory') || '[]');
-          const existing = history.find(h => h.date === today);
-          if (existing) { existing.bias = bias; existing.day = weekday; } else { history.push({ date: today, bias, day: weekday }); }
-          if (history.length > 14) history = history.slice(-14);
-          localStorage.setItem('okxMarketHistory', JSON.stringify(history));
-          const currentWeek = history.slice(-7);
-          const greens = currentWeek.filter(h => h.bias === '🟩').length;
-          const reds = currentWeek.filter(h => h.bias === '🟥').length;
-          const pattern = currentWeek.map(h => h.bias + ' ' + h.day).join(' • ');
-          let phase = 'Rotation Phase 🔄';
-          if (greens >= 5 && reds <= 2) phase = 'Alt Season Building 🌱';
-          else if (reds >= 5 && greens <= 2) phase = 'Cooling Phase ❄️';
-          else if (greens === reds) phase = 'Balanced Market ⚖️';
-          weeklyEl.textContent = pattern + ' — ' + phase + ' (' + greens + ' green / ' + reds + ' red)';
-        } catch(e) { weeklyEl.textContent = '—'; }
-      })();
+      // update UI elements
+      lastUpdatedEl.textContent = formatManilaTime();
+      greenCountEl.textContent = String(green.length);
+      redCountEl.textContent = String(red.length);
+      greenLiquidityEl.textContent = fmt(greenLiquidityTotal);
+      redLiquidityEl.textContent = fmt(redLiquidityTotal);
+      greenTxnEl.textContent = fmt(greenTxnTotal);
+      redTxnEl.textContent = fmt(redTxnTotal);
+      txnDominantEl.textContent = dominantTxn;
+      dominantSideEl.textContent = (greenLiquidityTotal > redLiquidityTotal) ? 'Bullish Liquidity (Green)' : (redLiquidityTotal > greenLiquidityTotal) ? 'Bearish Liquidity (Red)' : 'Balanced';
 
-      // finally render list
-      renderList();
+      // Build list items with a simple gap metric (abs difference of buy vs sell proxy using sign)
+      const enriched = filtered.map(d => {
+        const greenTxn = d.priceChangePercent >= 0 ? d.volume : 0;
+        const redTxn = d.priceChangePercent < 0 ? d.volume : 0;
+        const diff = Math.abs(greenTxn - redTxn);
+        return { ...d, greenTxn, redTxn, diff };
+      });
 
-      // attach search/sort handlers
-      searchInput.oninput = renderList;
-      sortSelect.onchange = renderList;
+      // Sorting & filtering based on UI controls
+      function renderList() {
+        const q = (searchInput.value||'').trim().toLowerCase();
+        const order = sortSelect.value || 'desc';
+        let list = enriched.slice();
+        if (q) list = list.filter(x => x.instId.toLowerCase().includes(q));
+        list.sort((a,b) => order === 'desc' ? b.diff - a.diff : a.diff - b.diff);
+        // cap to 200
+        list = list.slice(0, 200);
 
-    } catch (err) {
-      console.error('updateAll error', err);
-      pairsListEl.innerHTML = '<div style="padding:12px;color:var(--muted)">Error fetching OKX data. See console for details.</div>';
-    } finally {
-      refreshBtn.disabled = false;
-      refreshBtn.textContent = 'Refresh';
-    }
-  }
+        pairsListEl.innerHTML = '';
+        if (list.length === 0) pairsListEl.innerHTML = '<div style="padding:12px;color:var(--muted)">No matching pairs.</div>';
+        list.forEach(item => {
+          const el = document.createElement('div');
+          el.className = 'item';
+          el.innerHTML = \`
+            <div>
+              <div style="font-weight:600">\${item.instId}</div>
+              <div class="tiny">\${item.priceChangePercent ? item.priceChangePercent.toFixed(2) + '%' : '—'} &middot; Last: \${item.lastPrice || '—'}</div>
+            </div>
+            <div style="text-align:right">
+              <div><span class="green">\${fmt(item.greenTxn)}</span> / <span class="red">\${fmt(item.redTxn)}</span></div>
+              <div class="tiny">fund: \${(item.fundingRate||0).toFixed(6)}</div>
+            </div>
+          \`;
+          pairsListEl.appendChild(el);
+        });
+      }
 
-  // initial load
-  updateAll();
+      // Weekly rhythm logic (persisted in localStorage)
+      (function updateWeekly() {
+        try {
+          const today = new Date().toLocaleDateString('en-US', { timeZone: 'Asia/Manila' });
+          const weekday = new Date().toLocaleDateString('en-US', { weekday: 'short', timeZone: 'Asia/Manila' });
+          const bias = dominantTxn.includes('Bullish') ? '🟩' : dominantTxn.includes('Bearish') ? '🟥' : '⚫';
+          let history = JSON.parse(localStorage.getItem('okxMarketHistory') || '[]');
+          const existing = history.find(h => h.date === today);
+          if (existing) { existing.bias = bias; existing.day = weekday; } else { history.push({ date: today, bias, day: weekday }); }
+          if (history.length > 14) history = history.slice(-14);
+          localStorage.setItem('okxMarketHistory', JSON.stringify(history));
+          const currentWeek = history.slice(-7);
+          const greens = currentWeek.filter(h => h.bias === '🟩').length;
+          const reds = currentWeek.filter(h => h.bias === '🟥').length;
+          const pattern = currentWeek.map(h => h.bias + ' ' + h.day).join(' • ');
+          let phase = 'Rotation Phase 🔄';
+          if (greens >= 5 && reds <= 2) phase = 'Alt Season Building 🌱';
+          else if (reds >= 5 && greens <= 2) phase = 'Cooling Phase ❄️';
+          else if (greens === reds) phase = 'Balanced Market ⚖️';
+          weeklyEl.textContent = pattern + ' — ' + phase + ' (' + greens + ' green / ' + reds + ' red)';
+        } catch(e) { weeklyEl.textContent = '—'; }
+      })();
 
-  // set interval to refresh (30s)
-  let timer = setInterval(updateAll, 30000);
-  refreshBtn.addEventListener('click', () => { updateAll(); clearInterval(timer); timer = setInterval(updateAll, 30000); });
+      // finally render list
+      renderList();
 
-  // ath calculator UI
-  document.getElementById('calc').addEventListener('click', () => {
-    const symbol = document.getElementById('athSymbol').value.trim();
-    const ath = parseFloat(document.getElementById('athPrice').value);
-    const entry = parseFloat(document.getElementById('entryPrice').value);
-    const out = document.getElementById('athResult');
-    if (!ath || !entry || ath <= 0 || entry <= 0) { out.textContent = 'Please enter ATH and Entry prices > 0'; return; }
-    const gap = ((ath - entry) / ath) * 100;
-    const roi = ((ath - entry) / entry) * 100;
-    out.innerHTML = \`Symbol: \${symbol || '—'} • \${gap.toFixed(2)}% below ATH • Potential ROI to ATH: \${roi.toFixed(2)}%\`;
-  });
+      // attach search/sort handlers
+      searchInput.oninput = renderList;
+      sortSelect.onchange = renderList;
+
+    } catch (err) {
+      console.error('updateAll error', err);
+      pairsListEl.innerHTML = '<div style="padding:12px;color:var(--red)">🚨 Error fetching OKX data: ' + (err.message || 'Check console for details.') + ' This is likely a **CORS/Proxy error**.</div>';
+    } finally {
+      refreshBtn.disabled = false;
+      refreshBtn.textContent = 'Refresh';
+    }
+  }
+
+  // initial load
+  updateAll();
+
+  // set interval to refresh (30s)
+  let timer = setInterval(updateAll, 30000);
+  refreshBtn.addEventListener('click', () => { updateAll(); clearInterval(timer); timer = setInterval(updateAll, 30000); });
+
+  // ath calculator UI (unchanged)
+  document.getElementById('calc').addEventListener('click', () => {
+    const symbol = document.getElementById('athSymbol').value.trim();
+    const ath = parseFloat(document.getElementById('athPrice').value);
+    const entry = parseFloat(document.getElementById('entryPrice').value);
+    const out = document.getElementById('athResult');
+    if (!ath || !entry || ath <= 0 || entry <= 0) { out.textContent = 'Please enter ATH and Entry prices > 0'; return; }
+    const gap = ((ath - entry) / ath) * 100;
+    const roi = ((ath - entry) / entry) * 100;
+    out.innerHTML = \`Symbol: \${symbol || '—'} • \${gap.toFixed(2)}% below ATH • Potential ROI to ATH: \${roi.toFixed(2)}%\`;
+  });
 
 })();
 </script>
